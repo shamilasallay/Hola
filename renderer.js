@@ -3,6 +3,9 @@
 // All of the Node.js APIs are available in this process.
 const webcamjs = require('webcamjs');
 const fs = require('fs');
+var $ = global.jQuery = require('./jquery.min');
+
+
 
 webcamjs.set({width: 320, height: 240});
 webcamjs.attach('#my_camera');
@@ -10,15 +13,19 @@ const cameraEl = document.getElementById('my_camera');
 const videoEl = document.querySelector('#my_camera video');
 let isFrozen = false;
 
-const emojiDiv = document.getElementById('emoji-div');
-const emojis = ['happy'];
-emojiDiv.emoji({ emojis: emojis, width: '150px', animation: 'shake-chunk' });
-
+$(document).ready(function(){ 
+    console.log('aaxxxx')
+    $(function () {
+            var emojis = ['happy'];
+            //$("#emoji-div").emoji({ value: 4 });
+            $("#emoji-div").emoji({ emojis: emojis, width: '150px', animation: 'shake-chunk' });
+        });
+ });
 
 
 setInterval(() => {
       console.log('ddddddd')
-      takeSnap();
+    //   takeSnap();
   	}, 10000);
 
 

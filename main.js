@@ -7,9 +7,9 @@ function createWindow () {
   mainWindow = new BrowserWindow({
     "frame": false,
     "toolbar": false,
-    "width": 200,
-    "height": 300,
-    "transparent": true,
+    // "width": 200,
+    // "height": 300,
+    "transparent": false,
     "always-on-top": true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -18,7 +18,7 @@ function createWindow () {
   })
   mainWindow.loadFile('index.html')
 
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 }
 // app.whenReady().then(createWindow)
 app.on('ready', function () {
