@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Hello World!</title>
+    <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" src="thirdPartyLibs/webCam/webcam.min.js"></script>
+    <script type="text/javascript" src="thirdPartyLibs/webCam/base64-binary.js"></script>
+    <script src="thirdPartyLibs/emoji/emoji.js"></script>
+    <link rel="stylesheet" type="text/css" href="thirdPartyLibs/emoji/csshake.min.css">
+    <link rel="stylesheet" href="style.css">
+
+    <script src="main.js"></script>
+
+    <script>if (window.module) module = window.module;</script>
+
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+
+    <script>
+        $(function () {
+            var emojis = ['happy'];
+            //$("#emoji-div").emoji({ value: 4 });
+            $("#emoji-div").emoji({ emojis: emojis, width: '150px', animation: 'shake-chunk' });
+        });
+    </script>
+</head>
+
+<body>
+    <div id="emoji-div"></div>
+</body>
+
+
+
+</html>

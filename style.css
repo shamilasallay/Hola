@@ -1,0 +1,8 @@
+body {
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    background-color: transparent;
+    -webkit-app-region: drag;
+    -webkit-user-select: none;
+}
