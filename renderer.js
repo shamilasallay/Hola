@@ -3,6 +3,9 @@
 // All of the Node.js APIs are available in this process.
 const webcamjs = require('webcamjs');
 const fs = require('fs');
+var $ = global.jQuery = require('./jquery.min');
+
+
 
 webcamjs.set({width: 320, height: 240});
 webcamjs.attach('#my_camera');
@@ -10,42 +13,33 @@ const cameraEl = document.getElementById('my_camera');
 const videoEl = document.querySelector('#my_camera video');
 let isFrozen = false;
 
-const emojiDiv = document.getElementById('emoji-div');
-const emojis = ['happy'];
-emojiDiv.emoji({ emojis: emojis, width: '150px', animation: 'shake-chunk' });
+$(document).ready(function(){ 
+    $(function () {
+            setEmoji('happy')
+        });
+ });
 
+ function setEmoji(expression) {
+    var emojis = [expression];
+    $("#emoji-div").emoji({ emojis: emojis, width: '150px', animation: 'shake-chunk' });
+ }
 
 
 setInterval(() => {
-      console.log('ddddddd')
       takeSnap();
   	}, 10000);
 
 
 function takeSnap(){
-  //validation
-  // if(isFrozen){
-  //   webcamjs.unfreeze();
-  //   videoEl.style.display = 'block';
-  //   isFrozen = false;
-  // }
   webcamjs.snap(function (data_uri) {
-    console.log('aaa ',data_uri)
-    getEmotion(data_uri);
-
+    getEmotion(data_uri).then((expression) => {
+        setEmoji(expression)
+    })
+    .catch(error => {
+        reject(error)
+        setEmoji('wink')
+    })
   });
-    // webcamjs.freeze();
-    // videoEl.style.display = 'none';
-    // let canvas = window.document.querySelector('canvas');
-
-    // canvas.getContext('2d').drawImage(videoEl, 0, 0, 320, 240);
-    // let photoData = canvas.toDataURL('image/png').replace(/^data:image\/(png|jpg|jpeg);base64,/, '');
-    // savePhoto(photoData). then(() => {
-    //   getEmotion();
-    // });
-    // isFrozen = false;
-    // webcamjs.unfreeze();
-  
 }
 
 // async function savePhoto (photoData) {
