@@ -163,6 +163,12 @@
   var animations = ['shake', 'shake-slow', 'shake-hard', 'shake-horizontal', 'shake-vertical', 'shake-rotate', 'shake-opacity', 'shake-crazy', 'shake-chunk'];
 
   var emotionsArray = {
+    contempt:'&#x1f612;',
+    disgust:'&#x1f60f;',
+    fear:'&#x1f628;',
+    happiness:'&#x1f604;',
+    surprise:'&#x1f631;',
+    kissing:'&#x1f61a;',
     angry: '&#x1F620;',
     disappointed: '&#x1F61E;',
     meh: '&#x1F610;',
