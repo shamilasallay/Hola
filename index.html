@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Hello World!</title>
-    <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+    <script>if (typeof module === 'object') { window.module = module; module = undefined; }</script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script type="text/javascript" src="thirdPartyLibs/webCam/webcam.min.js"></script>
@@ -27,14 +27,23 @@
 </head>
 
 <body>
-    <div id="emoji-div"></div>
+    <div id="bubble" class="noti">
+        <div id="speech-bubble" class="speech-bubble">
+            <h1>Hola!!!</h1>
+            <h2>I'm here to talk with you!!!</h2>
+        </div>
+        <div class="shadow"></div>
+    </div>
+    
+    <div id="emoji-div">nn</div>
+
     <div id="my_camera" style="display: none;">Click to resume video</div>
 
 </body>
 
 <script>
-  // You can also require other files to run in this process
-  require('./renderer.js')
+    // You can also require other files to run in this process
+    require('./renderer.js')
 </script>
 <script src="./emotion.js"></script>
 <script src="thirdPartyLibs/emoji/emoji.js"></script>

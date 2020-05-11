@@ -1,28 +1,76 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow} = require('electron')
+const {app, BrowserWindow, ipcMain, ipcRenderer} = require('electron')
 const path = require('path')
 
 let mainWindow;
+let chatWindow;
+let notiWindow;
 function createWindow () {
   mainWindow = new BrowserWindow({
     "frame": false,
     "toolbar": false,
-    "width": 200,
-    "height": 300,
+    "width": 300,
+    "height": 400,
     "transparent": true,
-    "always-on-top": true,
+    // "always-on-top": true,
+    "resizable":false,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true
     }
   })
+
   mainWindow.loadFile('index.html')
 
   // mainWindow.webContents.openDevTools()
 }
+
+function createChatWindow () {
+  chatWindow = new BrowserWindow({
+    width: 300,
+    height: 450,
+    show: false,
+    frame: true,
+    fullscreenable: false,
+    resizable: false,
+    transparent: true,
+    webPreferences: {
+      // Prevents renderer process code from not running when window is
+      // hidden
+      backgroundThrottling: false
+    }
+  })
+
+  chatWindow.loadFile('chatbot.html')
+
+  // chatWindow.webContents.openDevTools()
+}
+
+function createBubbleNotificationWindow () {
+  notiWindow = new BrowserWindow({
+    width: 300,
+    height: 450,
+    show: true,
+    frame: false,
+    fullscreenable: false,
+    resizable: false,
+    transparent: false,
+    webPreferences: {
+      // Prevents renderer process code from not running when window is
+      // hidden
+      backgroundThrottling: false
+    }
+  })
+
+  notiWindow.loadFile('bubbleNotification.html')
+
+  // chatWindow.webContents.openDevTools()
+}
 // app.whenReady().then(createWindow)
 app.on('ready', function () {
     createWindow();
+    createChatWindow();
+    // createBubbleNotificationWindow()
     // setTimeout(() => {
     //     mainWindow.webContents.send('call-ShowCam')
     // }, 10000);
@@ -44,6 +92,29 @@ app.on('activate', function () {
   // dock icon is clicked and there are no other windows open.
   if (BrowserWindow.getAllWindows().length === 0) createWindow()
 })
+ipcMain.on('open-new-window', (event,filename) => {
+  showChatWindow()
+});
+
+const showChatWindow = () => {
+  const position = getChatWindowPosition()
+  chatWindow.setPosition(position.x, position.y, false)
+  chatWindow.show()
+  chatWindow.focus()
+}
+
+const getChatWindowPosition = () => {
+  const windowBounds = chatWindow.getBounds()
+  const trayBounds = mainWindow.getBounds()
+
+  // Center window horizontally below the tray icon
+  const x = Math.round(trayBounds.x + (trayBounds.width / 2) - (windowBounds.width / 2))
+
+  // Position window 4 pixels vertically below the tray icon
+  const y = Math.round(trayBounds.y + trayBounds.height + 4)
+
+  return {x: x, y: y}
+}
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.

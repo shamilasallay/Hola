@@ -2,7 +2,78 @@ body {
     position: fixed;
     height: 100%;
     width: 100%;
-    background-color: transparent;
+    background: transparent;
     -webkit-app-region: drag;
     -webkit-user-select: none;
 }
+
+
+.noti{
+    position:relative;
+    animation-name:animation;
+    animation-duration:1.5s;
+    animation-timing-function:ease-out;
+    animation-direction:alternate;
+    animation-iteration-count:infinite;
+    color: bisque;
+  }
+  /* @keyframes animation{
+    from{
+      margin:30px auto;
+    }
+    to{
+      margin:50px auto;
+    }
+  }
+  @keyframes changeWidth{
+    from{
+      width:30px;
+    }
+    to{
+      width:100px;
+    }
+  } */
+
+/* .speech-bubble {
+	position: relative;
+	background: #00aabb;
+    /* border-radius: .4em; */
+    /* border-color: transparent;
+}
+
+.speech-bubble:after {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left: 50%;
+	width: 0;
+	height: 0;
+	border: 45px solid transparent;
+	border-top-color: #00aabb;
+	border-bottom: 0;
+	border-left: 0;
+	margin-left: -22.5px;
+	margin-bottom: -45px;
+} */
+
+.speech-bubble {
+	position: relative;
+	background: #00aabb;
+	border-radius: .4em;
+}
+
+.speech-bubble:after {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left: 50%;
+	width: 0;
+	height: 0;
+	border: 45px solid transparent;
+	border-top-color: #00aabb;
+	border-bottom: 0;
+	border-left: 0;
+	margin-left: -22.5px;
+	margin-bottom: -45px;
+}
+  

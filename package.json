@@ -9,7 +9,9 @@
   "author": "Shamila Sallay",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^8.2.5"
+    "chat-bubble": "^1.4.0",
+    "electron": "^8.2.5",
+    "electron-builder": "^22.6.0"
   },
   "dependencies": {
     "jquery": "^3.5.0",
