@@ -32,7 +32,7 @@ function createChatWindow () {
     show: false,
     frame: true,
     fullscreenable: false,
-    resizable: false,
+    resizable: true,
     transparent: true,
     webPreferences: {
       // Prevents renderer process code from not running when window is

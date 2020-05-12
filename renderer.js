@@ -16,10 +16,15 @@ const videoEl = document.querySelector('#my_camera video');
 let isFrozen = false;
 
 let bubbleclicked = false;
+const defaultMessage = "Hola!!! I'm here to talk with you!!!";
+let talkEmojiInterval;
+
 
 $(document).ready(function () {
+  console.log('start')
   $(function () {
     setEmoji('happy')
+    talkEmoji(defaultMessage, true)
   });
   $("#bubble").click(function () {
     $("#bubble").hide();
@@ -33,21 +38,24 @@ function setEmoji(expression) {
 }
 
 function showbubble(showBubble) {
-  if (showBubble) {
-    if ($('#bubble').is(":visible")) {
-      $("#bubble").hide();
-    }
-    else if ($('#bubble').is(":hidden") && bubbleclicked) {
-      $("#bubble").hide();
-      bubbleclicked = false;
-    }
-    else if ($('#bubble').is(":hidden") && bubbleclicked == false) {
-      $("#bubble").show();
-    }
-  }
-  else{
+  // if (showBubble) {
+  if ($('#bubble').is(":visible")) {
     $("#bubble").hide();
+    talkEmoji(defaultMessage, false)
   }
+  else if ($('#bubble').is(":hidden") && bubbleclicked) {
+    $("#bubble").hide();
+    bubbleclicked = false;
+    talkEmoji(defaultMessage, false)
+  }
+  else if ($('#bubble').is(":hidden") && bubbleclicked == false) {
+    $("#bubble").show();
+    talkEmoji(defaultMessage, true)
+  }
+  // }
+  // else {
+  //   $("#bubble").hide();
+  // }
 
 }
 
@@ -91,9 +99,34 @@ $('#emoji-div').on('click', function (event) {
   ipcRenderer.send('open-new-window', 'chatbot');
 })
 
-ipcMain.on('show-bubble', (event) => {
-  showbubble(true)
-});
+// ipcMain.on('show-bubble', (event) => {
+//   showbubble(true)
+// });
+
+function talkEmoji(message, talk) {
+    const delay = 200;
+    const emojiMap = {
+      "openmouth": ["o", "e"],
+      "meh": ["b", "p", "m"],
+      "slightsmile": ["c", "g", "j", "k", "n", "r", "s", "t", "v", "x", "z", "sh"],
+      "astonish": ["d", "l", "th"],
+      "hushedface": ["q", "u", "w", "y"],
+      "griningface": ["a", "i"],
+      "frowning": []
+    }
+    const defaultEmoji = "meh";
+    if(talk){
+    talkEmojiInterval = setInterval(function () {
+        const character = message.toLowerCase()[Math.floor(new Date / delay) % (message.length + 1)];
+        setEmoji(Object.keys(emojiMap).find(emoji => emojiMap[emoji].includes(character)) || defaultEmoji)
+        document.getElementById("bubbleTalkId").innerHTML = message.substr(0, Math.floor(new Date / delay)%(message.length+1));
+    },delay)
+  }
+  else{
+    clearInterval(talkEmojiInterval)
+  }
+}
+
 
 
 

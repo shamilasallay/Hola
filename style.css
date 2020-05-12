@@ -15,7 +15,7 @@ body {
     animation-timing-function:ease-out;
     animation-direction:alternate;
     animation-iteration-count:infinite;
-    color: bisque;
+    color: black;
   }
   /* @keyframes animation{
     from{
@@ -58,7 +58,7 @@ body {
 
 .speech-bubble {
 	position: relative;
-	background: #00aabb;
+	background:bisque;
 	border-radius: .4em;
 }
 
@@ -70,7 +70,7 @@ body {
 	width: 0;
 	height: 0;
 	border: 45px solid transparent;
-	border-top-color: #00aabb;
+	border-top-color: bisque;
 	border-bottom: 0;
 	border-left: 0;
 	margin-left: -22.5px;
