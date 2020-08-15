@@ -2,8 +2,9 @@ const $ = require('jquery')
 
 function getEmotion(data_uri) {
 	return new Promise((resolve, reject) => {
-
+		console.log("data_uri ",data_uri);
 		callEmotionApi(data_uri).then(data => {
+			console.log("data ",data);
 			sortEmotion(data[0]['faceAttributes']['emotion'])
 				.then((emotion) => {
 					if (emotion == 'anger') {
@@ -45,18 +46,16 @@ function getEmotion(data_uri) {
 }
 
 function callEmotionApi(data_uri) {
-	var subscriptionKey = "2f17b5e81f1a443d8c16614410225e1c";
+	var subscriptionKey = "9ae4565341d84e2b886ac0665336b530";
 
 	var uriBase =
-		"https://deepmojidesktoppartner.cognitiveservices.azure.com/face/v1.0/detect";
+		"https://deepmoji.cognitiveservices.azure.com/face/v1.0/detect";
 
 	// Request parameters.
 	var params = {
 		"returnFaceId": "true",
 		"returnFaceLandmarks": "false",
-		"returnFaceAttributes":
-			"age,gender,headPose,smile,facialHair,glasses,emotion," +
-			"hair,makeup,occlusion,accessories,blur,exposure,noise"
+		"returnFaceAttributes":"emotion"
 	};
 	return new Promise((resolve, reject) => {
 		$.ajax({

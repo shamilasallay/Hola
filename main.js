@@ -7,13 +7,13 @@ let chatWindow;
 let notiWindow;
 function createWindow () {
   mainWindow = new BrowserWindow({
-    "frame": false,
+    "frame": true,
     "toolbar": false,
     "width": 300,
     "height": 400,
-    "transparent": true,
+    "transparent": false,
     // "always-on-top": true,
-    "resizable":false,
+    "resizable":true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true
@@ -22,7 +22,7 @@ function createWindow () {
 
   mainWindow.loadFile('index.html')
 
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 }
 
 function createChatWindow () {
@@ -31,7 +31,7 @@ function createChatWindow () {
     height: 450,
     show: false,
     frame: true,
-    fullscreenable: false,
+    fullscreenable: true,
     resizable: true,
     transparent: true,
     webPreferences: {

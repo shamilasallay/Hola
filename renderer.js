@@ -18,14 +18,15 @@ let isFrozen = false;
 let bubbleclicked = false;
 const defaultMessage = "Hola!!! I'm here to talk with you!!!";
 let talkEmojiInterval;
+let takeSnapInterval;
+let showBubbleInterval;
 
 
 $(document).ready(function () {
-  console.log('start')
   $(function () {
     setEmoji('happy')
-    talkEmoji(defaultMessage, true)
   });
+  showbubble();
   $("#bubble").click(function () {
     $("#bubble").hide();
     bubbleclicked = true;
@@ -37,20 +38,18 @@ function setEmoji(expression) {
   $("#emoji-div").emoji({ emojis: emojis, width: '150px', animation: 'shake-chunk' });
 }
 
-function showbubble(showBubble) {
+function showbubble() {
   // if (showBubble) {
   if ($('#bubble').is(":visible")) {
     $("#bubble").hide();
-    talkEmoji(defaultMessage, false)
   }
   else if ($('#bubble').is(":hidden") && bubbleclicked) {
     $("#bubble").hide();
     bubbleclicked = false;
-    talkEmoji(defaultMessage, false)
   }
   else if ($('#bubble').is(":hidden") && bubbleclicked == false) {
     $("#bubble").show();
-    talkEmoji(defaultMessage, true)
+    talkEmoji(defaultMessage)
   }
   // }
   // else {
@@ -59,10 +58,13 @@ function showbubble(showBubble) {
 
 }
 
-setInterval(() => {
+takeSnapInterval = setInterval(() => {
   takeSnap();
-  showbubble();
 }, 10000);
+
+setInterval(() => {
+  showbubble();
+}, 10000)
 
 function takeSnap() {
   webcamjs.snap(function (data_uri) {
@@ -70,7 +72,7 @@ function takeSnap() {
       setEmoji(expression)
     })
       .catch(error => {
-        reject(error)
+        console.log(error)
         setEmoji('wink')
       })
   });
@@ -88,14 +90,7 @@ function takeSnap() {
 // }
 
 $('#emoji-div').on('click', function (event) {
-  // console.log('ssssss ',event)
-  // if(event.target != this){
-  //   console.log('aa')
-  // }
-  // else{
-  //   console.log('bb')
-  // }
-  showbubble(false);
+  bubbleclicked = true;
   ipcRenderer.send('open-new-window', 'chatbot');
 })
 
@@ -103,28 +98,35 @@ $('#emoji-div').on('click', function (event) {
 //   showbubble(true)
 // });
 
-function talkEmoji(message, talk) {
-    const delay = 200;
-    const emojiMap = {
-      "openmouth": ["o", "e"],
-      "meh": ["b", "p", "m"],
-      "slightsmile": ["c", "g", "j", "k", "n", "r", "s", "t", "v", "x", "z", "sh"],
-      "astonish": ["d", "l", "th"],
-      "hushedface": ["q", "u", "w", "y"],
-      "griningface": ["a", "i"],
-      "frowning": []
+function talkEmoji(message) {
+  let x = 0;
+  const delay = 200;
+  const emojiMap = {
+    "openmouth": ["o", "e"],
+    "meh": ["b", "p", "m"],
+    "slightsmile": ["c", "g", "j", "k", "n", "r", "s", "t", "v", "x", "z", "sh"],
+    "astonish": ["d", "l", "th"],
+    "hushedface": ["q", "u", "w", "y"],
+    "griningface": ["a", "i"],
+    "frowning": []
+  }
+  const arr = ["H","o","l","a","I","'","m"," ","h","e","r","e"," ","t","o"," ","t","a","l","k"," ","w","i","t","h"," ","y","o","u","!","!","!"]
+  const defaultEmoji = "slightsmile";
+  talkEmojiInterval = setInterval(function () {
+    const character = message[Math.floor(new Date / delay)%(message.length+1)];
+    setEmoji(Object.keys(emojiMap).find(emoji => emojiMap[emoji].includes(character)) || defaultEmoji);
+    document.getElementById("bubbleTalkId").innerHTML = [...message].slice(0, x).join("");
+    // document.getElementById("bubbleTalkId").innerHTML = message.substr(0, Math.floor(new Date / delay) % (message.length + 1));
+    // if (++x == message.length) {
+    //   clearInterval(talkEmojiInterval);
+    //   $("#bubble").hide();
+    // }
+    if(++x == message.length + 1){
+      clearInterval(talkEmojiInterval);    
     }
-    const defaultEmoji = "meh";
-    if(talk){
-    talkEmojiInterval = setInterval(function () {
-        const character = message.toLowerCase()[Math.floor(new Date / delay) % (message.length + 1)];
-        setEmoji(Object.keys(emojiMap).find(emoji => emojiMap[emoji].includes(character)) || defaultEmoji)
-        document.getElementById("bubbleTalkId").innerHTML = message.substr(0, Math.floor(new Date / delay)%(message.length+1));
-    },delay)
-  }
-  else{
-    clearInterval(talkEmojiInterval)
-  }
+    
+  }, delay)
+
 }
 
 
