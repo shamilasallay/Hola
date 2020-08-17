@@ -1,173 +1,59 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<title>Keyboard Input for chat-bubble</title>
-
-	<!-- for mobile screens -->
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-	<!-- stylesheets are conveniently separated into components -->
-	<link rel="stylesheet" media="all" href="./thirdPartyLibs/chat-bubble/component/styles/setup.css">
-	<link rel="stylesheet" media="all" href="./thirdPartyLibs/chat-bubble/component/styles/says.css">
-	<link rel="stylesheet" media="all" href="./thirdPartyLibs/chat-bubble/component/styles/reply.css">
-	<link rel="stylesheet" media="all" href="./thirdPartyLibs/chat-bubble/component/styles/typing.css">
-	<link rel="stylesheet" media="all" href="./thirdPartyLibs/chat-bubble/component/styles/input.css">
-	<style>
-	body {
-		background: #dcdde0;
-	}
-	.bubble-container {
-		height: 100vh;
-	}
-	.bubble-container .input-wrap textarea {
-		margin: 0;
-		width: calc(100% - 30px);
-	}
-	</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="chatbot.css">
+    <title>Bot</title>
 </head>
 <body>
-
-<!-- container element for chat window -->
-<div id="speak">🎤</div>
-
-<div id="chat"></div>
-
-<!-- import the JavaScript file -->
-<script src="./thirdPartyLibs/chat-bubble//component/Bubbles.js"></script>
-<script>
-    document.getElementById('speak').addEventListener('click', function (event) {
-            window.location.replace("http://localhost:5000/")
-
-        });
-// initialize by constructing a named function...
-// ...and add text processing plugin:
-var chatWindow = new Bubbles(document.getElementById("chat"), "chatWindow", {
-  // the one that we care about is inputCallbackFn()
-  // this function returns an object with some data that we can process from user input
-  // and understand the context of it
-
-  // this is an example function that matches the text user typed to one of the answer bubbles
-  // this function does no natural language processing
-  // this is where you may want to connect this script to NLC backend.
-  inputCallbackFn: function(o) {
-    // add error conversation block & recall it if no answer matched
-    var miss = function() {
-      chatWindow.talk(
-        {
-          "i-dont-get-it": {
-            says: [
-              "Sorry, I don't get it 😕. Pls repeat?"
-            ],  
-            reply: o.convo[o.standingAnswer].reply
-          }
-        },
-        "i-dont-get-it"
-      )
-    }
-
-    // do this if answer found
-    var match = function(key) {
-      setTimeout(function() {
-        chatWindow.talk(convo, key) // restart current convo from point found in the answer
-      }, 600)
-    }
-
-    // sanitize text for search function
-    var strip = function(text) {
-      return text.toLowerCase().replace(/[\s.,\/#!$%\^&\*;:{}=\-_'"`~()]/g, "")
-    }
-
-    // search function
-    var found = false
-    o.convo[o.standingAnswer].reply.forEach(function(e, i) {
-      strip(e.question).includes(strip(o.input)) && o.input.length > 0
-        ? (found = e.answer)
-        : found ? null : (found = false)
-    })
-    found ? match(found) : miss()
-  }
-}) // done setting up chat-bubble
-
-// conversation object defined separately, but just the same as in the
-// "Basic chat-bubble Example" (1-basics.html)
-var convo = {
-    ice: {
-        says: ["Hi", "How are you doing today?"],
-        reply: [
-            {
-                question: "Good",
-                answer: "good"
-            },
-            {
-                question: "Bad",
-                answer: "bad"
-            }
-        ]
-    },
-    good: {
-        says: ["😄It's good to hear"],
-        reply: [
-            {
-                question: "Work",
-                answer: "work"
-            },
-            {
-                question: "How does corona spread?",
-                answer: "rest"
-            }
-        ]
-    },
-    rest: {
-        says: ["Human to human, I believe"],
-        reply: [
-            {
-                question: "How does corona spread?",
-                answer: "rest"
-            }
-        ]
-    },
-    bad: {
-        says: ["😕 Why? what happended?"],
-        reply: [
-            {
-                question: "Sick",
-                answer: "sick"
-            }
-        ]
-    },
-    sick:{
-        says: ["😷 Be careful there's corona pandemic allover the world "],
-        reply: [
-            {
-                question: "Solution",
-                answer: "solution"
-            }
-        ]
-    },
-    corona:{
-        says: ["😷"],
-        reply: [
-            {
-                question: "Solution",
-                answer: "solution"
-            }
-        ]
-    },
-    exams:{
-        says: ["😬 Don't worry you will be able to pass"],
-        reply: [
-            {
-                question: "Don't worry you will be able to pass",
-                answer: "ice"
-            }
-        ]
-
-    }
-}
-
-
-// pass JSON to your function and you're done!
-chatWindow.talk(convo)
-</script>
+        <div id="main-box">
+            <header class="header">
+                <h5 class="text-left">AI Chatbot</h5>
+                <h6>
+                    <span id="status"> 
+                        <i class="fas fa-circle" style="color:grey"></i> Checking..
+                    </span> 
+                </h6>
+                <span class="closer">
+                    <span class="voice-box" title="Listen to the HubBot">
+                        <input type="checkbox" onclick="voice()" id="voice" name="voice">
+                        <label for="voice" class="label-color-voice">
+                            <i class="fas fa-volume-up"></i>
+                        </label>
+                    </span>
+                </span>
+            </header>
+            <div id="chat-container">
+                <ul id="conversation">
+                    <li class="responder">Hi! I'm your Hola bot. Let's talk!</li>
+                </ul>
+                <div id="bottom"></div>
+            </div>
+        <div id="typing" class="text-muted">
+            <img src="typing.gif" width="50px">
+        </div>
+            <section class="row" id="input">
+                <div class="col-9 col-md-10" style="padding-right: 0" id="input-box">
+                    <input type="text" id="chat-input" placeholder="Enter your message" class="form-control" />
+                    <!-- <span id="mic"><i class="fas fa-microphone"></i></span> -->
+                </div>
+                <div class="col-3 col-md-2" style="padding-left: 5px">
+                    <button id="sendBtn" class="btn btn-primary btn-block">
+                        <i class="fas fa-paper-plane" ></i>
+                    </button>
+                </div>
+            </section>
+        </div>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js"></script>
+<script defer src="https://use.fontawesome.com/releases/v5.0.4/js/all.js"></script>
+<script type="module" src="chat.js"></script>
 </body>
+</html>

@@ -26,11 +26,14 @@ $(document).ready(function () {
   $(function () {
     setEmoji('happy')
   });
+  ipcRenderer.send( "setBubbleClickedGlbVar", true );
+
   showbubble();
-  $("#bubble").click(function () {
-    $("#bubble").hide();
-    bubbleclicked = true;
-  });
+
+  // $("#bubble").click(function () {
+  //   $("#bubble").hide();
+  //   bubbleclicked = true;
+  // });
 });
 
 function setEmoji(expression) {
@@ -39,22 +42,23 @@ function setEmoji(expression) {
 }
 
 function showbubble() {
+  let typeVal = typeof (remote.getGlobal('bubbleClickGlb'));
+  
+  if(typeof remote.getGlobal('bubbleClickGlb') !== "undefined"){
+    bubbleclicked = remote.getGlobal('bubbleClickGlb').varValue;
+  }
+
   // if (showBubble) {
   if ($('#bubble').is(":visible")) {
     $("#bubble").hide();
   }
-  else if ($('#bubble').is(":hidden") && bubbleclicked) {
+  else if(bubbleclicked){
     $("#bubble").hide();
-    bubbleclicked = false;
   }
-  else if ($('#bubble').is(":hidden") && bubbleclicked == false) {
+  else if ( bubbleclicked == false) {
     $("#bubble").show();
-    talkEmoji(defaultMessage)
+    talkEmoji(defaultMessage);
   }
-  // }
-  // else {
-  //   $("#bubble").hide();
-  // }
 
 }
 
@@ -64,7 +68,7 @@ takeSnapInterval = setInterval(() => {
 
 setInterval(() => {
   showbubble();
-}, 10000)
+}, 15000)
 
 function takeSnap() {
   webcamjs.snap(function (data_uri) {
@@ -78,25 +82,10 @@ function takeSnap() {
   });
 }
 
-// async function savePhoto (photoData) {
-//   console.log('dsdasd')
-//   let filePath = 'face.png'
-//   if (photoData) {
-//     fs.writeFile(filePath, photoData, 'base64', (err) => {
-//       if (err) alert(`There was a problem saving the photo: ${err.message}`);
-//       photoData = null;
-//     });
-//   }
-// }
-
 $('#emoji-div').on('click', function (event) {
   bubbleclicked = true;
   ipcRenderer.send('open-new-window', 'chatbot');
 })
-
-// ipcMain.on('show-bubble', (event) => {
-//   showbubble(true)
-// });
 
 function talkEmoji(message) {
   let x = 0;
@@ -116,11 +105,6 @@ function talkEmoji(message) {
     const character = message[Math.floor(new Date / delay)%(message.length+1)];
     setEmoji(Object.keys(emojiMap).find(emoji => emojiMap[emoji].includes(character)) || defaultEmoji);
     document.getElementById("bubbleTalkId").innerHTML = [...message].slice(0, x).join("");
-    // document.getElementById("bubbleTalkId").innerHTML = message.substr(0, Math.floor(new Date / delay) % (message.length + 1));
-    // if (++x == message.length) {
-    //   clearInterval(talkEmojiInterval);
-    //   $("#bubble").hide();
-    // }
     if(++x == message.length + 1){
       clearInterval(talkEmojiInterval);    
     }

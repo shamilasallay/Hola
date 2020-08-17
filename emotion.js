@@ -2,9 +2,7 @@ const $ = require('jquery')
 
 function getEmotion(data_uri) {
 	return new Promise((resolve, reject) => {
-		console.log("data_uri ",data_uri);
 		callEmotionApi(data_uri).then(data => {
-			console.log("data ",data);
 			sortEmotion(data[0]['faceAttributes']['emotion'])
 				.then((emotion) => {
 					if (emotion == 'anger') {

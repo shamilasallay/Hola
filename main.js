@@ -1,17 +1,19 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow, ipcMain, ipcRenderer} = require('electron')
+const {app, BrowserWindow, ipcMain, ipcRenderer, systemPreferences} = require('electron')
 const path = require('path')
 
 let mainWindow;
 let chatWindow;
 let notiWindow;
+let status = 0;
+
 function createWindow () {
   mainWindow = new BrowserWindow({
-    "frame": true,
+    "frame": false,
     "toolbar": false,
     "width": 300,
     "height": 400,
-    "transparent": false,
+    "transparent": true,
     // "always-on-top": true,
     "resizable":true,
     webPreferences: {
@@ -22,7 +24,7 @@ function createWindow () {
 
   mainWindow.loadFile('index.html')
 
-  mainWindow.webContents.openDevTools()
+  // mainWindow.webContents.openDevTools()
 }
 
 function createChatWindow () {
@@ -37,6 +39,8 @@ function createChatWindow () {
     webPreferences: {
       // Prevents renderer process code from not running when window is
       // hidden
+      preload: path.join(__dirname, 'preload.js'),
+      nodeIntegration : true,
       backgroundThrottling: false
     }
   })
@@ -70,10 +74,14 @@ function createBubbleNotificationWindow () {
 app.on('ready', function () {
     createWindow();
     createChatWindow();
-    // createBubbleNotificationWindow()
-    // setTimeout(() => {
-    //     mainWindow.webContents.send('call-ShowCam')
-    // }, 10000);
+    
+    chatWindow.on('close', function(e){
+
+      global.bubbleClickGlb = {
+        varValue: false
+     }
+     
+  });
 })
 
 // Quit when all windows are closed.
@@ -95,6 +103,8 @@ app.on('activate', function () {
 ipcMain.on('open-new-window', (event,filename) => {
   showChatWindow()
 });
+
+
 
 const showChatWindow = () => {
   const position = getChatWindowPosition()
@@ -118,3 +128,6 @@ const getChatWindowPosition = () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
+
+systemPreferences.askForMediaAccess('microphone').then((allowed)=>console.log('Microphone is allowed'))
